@@ -61,7 +61,7 @@ package body Sequence_Checker with SPARK_Mode => On is
    -----------------------
 
    function Sequence_Is_Valid (Sequence : in String) return Result_Code is
-     (--  Check String length
+     ( --  Check String length
       if Sequence = Exit_Request then String_Is_Exit_Code
       elsif Sequence'Length > Guess_Array_Type_Index_Range'Last then
          String_Too_Long
