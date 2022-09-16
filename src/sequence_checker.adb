@@ -1,4 +1,4 @@
-package body Sequence_Checker is
+package body Sequence_Checker with SPARK_Mode => On is
 
    -------------------------------
    -- String_Guess_To_Int_Array --
@@ -10,8 +10,8 @@ package body Sequence_Checker is
       Return_Value : Guess_Int_Array;
    begin
       for J in Guess_Array_Type_Index_Range'Range loop
-         Return_Value (J) := Single_Number_Guess_Range'Value
-           (Guess_String (J .. J));
+         Return_Value (J) :=
+           Character'Pos (Guess_String (J)) - Character'Pos ('0');
       end loop;
 
       return Return_Value;
@@ -21,40 +21,28 @@ package body Sequence_Checker is
    -- String_Is_Int_Array --
    -------------------------
 
-   function String_Is_Int_Array (Guess_String : in String) return Boolean
-   is
-      Temp_Value : Single_Number_Guess_Range;
-   begin
-
-      for J in Guess_Array_Type_Index_Range'Range loop
-         Temp_Value := Single_Number_Guess_Range'Value (Guess_String (J .. J));
-      end loop;
-      return True;
-   exception
-      when others =>
-         return False;
-   end String_Is_Int_Array;
+   function String_Is_Int_Array (Guess_String : in String) return Boolean is
+     (Guess_String'First = Guess_Array_Type_Index_Range'First
+       and then Guess_String'Last = Guess_Array_Type_Index_Range'Last
+       and then (for all J in Guess_String'Range =>
+                   Guess_String (J) in '0' .. '9'));
 
    -----------------------
    -- Sequence_Is_Valid --
    -----------------------
 
    function Sequence_Is_Valid (Sequence : in String) return Result_Code is
-   begin
-      --  Check String length
+     (--  Check String length
       if Sequence'Length > Guess_Array_Type_Index_Range'Last then
-         return String_Too_Long;
+         String_Too_Long
       elsif Sequence'Length < Guess_Array_Type_Index_Range'Last then
-         return String_Too_Short;
+         String_Too_Short
       elsif Sequence = "exit" then
-         return String_Is_Valid;
+         String_Is_Valid
       elsif not String_Is_Int_Array (Sequence) then
-         return String_Not_All_Integers;
+         String_Not_All_Integers
       else
-         return String_Is_Valid;
-      end if;
-
-   end Sequence_Is_Valid;
+         String_Is_Valid);
 
    --------------------
    -- Sequence_Found --

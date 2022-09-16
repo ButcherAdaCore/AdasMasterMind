@@ -20,10 +20,13 @@ package Sequence_Checker with SPARK_MODE => On is
    --  Verify that the sequence is a valid String representation of an Integer
    --  or is equal to "exit"
 
+   function String_Is_Int_Array (Guess_String : in String) return Boolean;
+   --  Checks if the provided String is a sequence of Integers
+
    function Compare_Sequences
      (Guess_Sequence : String; Check_Sequence : Guess_Int_Array)
       return Results_Array_Type
-     with Pre => Sequence_Is_Valid (Guess_Sequence) = String_Is_Valid;
+     with Pre => String_Is_Int_Array (Guess_Sequence);
 
    --  Convert the String representation of the sequence in an Integer array
    --  compare the two sequences and return the result
@@ -34,11 +37,9 @@ package Sequence_Checker with SPARK_MODE => On is
 
 private
 
-   function String_Is_Int_Array (Guess_String : in String) return Boolean;
-   --  Checks if the provided String is a sequence of Integers
-
    function String_Guess_To_Int_Vector
-     (Guess_String : in String) return Guess_Int_Array;
+     (Guess_String : in String) return Guess_Int_Array
+     with Pre => String_Is_Int_Array (Guess_String);
    --  Converts String guesses into a 4 element array of
    --  Single_Number_Guess_Range
 
