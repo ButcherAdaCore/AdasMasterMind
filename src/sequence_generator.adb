@@ -1,3 +1,4 @@
+with Ada.Text_IO;
 package body Sequence_Generator is
 
    ------------------------------
