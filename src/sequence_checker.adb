@@ -85,7 +85,7 @@ package body Sequence_Checker with SPARK_Mode => On is
 
    function Compare_Sequences
      (Guess_Sequence : String; Check_Sequence : Guess_Int_Array)
-      return UTF8_Results
+      return Results_Array_Type
    is
       --  Convert the string representation into an integer vector
       Guess_Array : constant Guess_Int_Array :=
@@ -117,6 +117,16 @@ package body Sequence_Checker with SPARK_Mode => On is
          end if;
       end loop;
 
+      return Result_Array;
+   end Compare_Sequences;
+
+   function Compare_Sequences
+     (Guess_Sequence : String; Check_Sequence : Guess_Int_Array)
+      return UTF8_Results
+   is
+      Result_Array : constant Results_Array_Type :=
+        Compare_Sequences (Guess_Sequence, Check_Sequence);
+   begin
       return Convert_Results_To_UTF8_Results (Result_Array);
    end Compare_Sequences;
 
