@@ -20,4 +20,17 @@ package Common_Types is
    subtype Guess_String_Type is String (Guess_Array_Type_Index_Range);
    --  String type used to capture the User Input
 
+   subtype UTF8_Results is Wide_Wide_String (Guess_Array_Type_Index_Range);
+   --  The results displayed as a sequence of UTF8 characters
+
+   type Guess_String_Type_Status is record
+      Guess_String : Guess_String_Type;
+      Is_Exit_Code : Boolean;
+   end record;
+   --  Groups a guess String and an indication if the String is the exit
+   --  request
+
+   Exit_Request : constant String := "exit";
+   --  Used to end the game
+
 end Common_Types;

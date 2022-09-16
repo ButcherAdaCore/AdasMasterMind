@@ -2,7 +2,7 @@ with Common_Types; use Common_Types;
 
 package User_Input is
 
-   function Get_User_Input return Guess_String_Type;
+   function Get_User_Input return Guess_String_Type_Status;
    --  Capture, validate and return the input from the user
 
    function Get_Count_Tries return String;
