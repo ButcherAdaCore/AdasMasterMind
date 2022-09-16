@@ -1,5 +1,4 @@
-
-package body Sequence_Checker is
+package body Sequence_Checker with SPARK_Mode => On is
 
    -------------------------------------
    -- Convert_Results_To_UTF8_Results --
@@ -41,7 +40,7 @@ package body Sequence_Checker is
    begin
       for J in Guess_Array_Type_Index_Range'Range loop
          Return_Value (J) :=
-           Single_Number_Guess_Range'Value (Guess_String (J .. J));
+           Character'Pos (Guess_String (J)) - Character'Pos ('0');
       end loop;
 
       return Return_Value;
@@ -52,30 +51,26 @@ package body Sequence_Checker is
    -------------------------
 
    function String_Is_Int_Array (Guess_String : in String) return Boolean is
-      Temp_Value : Single_Number_Guess_Range;
-   begin
-
-      for J in Guess_Array_Type_Index_Range'Range loop
-         Temp_Value := Single_Number_Guess_Range'Value (Guess_String (J .. J));
-      end loop;
-      return True;
-   exception
-      when others =>
-         return False;
-   end String_Is_Int_Array;
+     (Guess_String'First = Guess_Array_Type_Index_Range'First
+       and then Guess_String'Last = Guess_Array_Type_Index_Range'Last
+       and then (for all J in Guess_String'Range =>
+                   Guess_String (J) in '0' .. '9'));
 
    -----------------------
    -- Sequence_Is_Valid --
    -----------------------
 
    function Sequence_Is_Valid (Sequence : in String) return Result_Code is
-     (if Sequence = Exit_Request then String_Is_Exit_Code
+     (--  Check String length
+      if Sequence = Exit_Request then String_Is_Exit_Code
       elsif Sequence'Length > Guess_Array_Type_Index_Range'Last then
-        String_Too_Long
+         String_Too_Long
       elsif Sequence'Length < Guess_Array_Type_Index_Range'Last then
-        String_Too_Short
-      elsif not String_Is_Int_Array (Sequence) then String_Not_All_Integers
-      else String_Is_Valid);
+         String_Too_Short
+      elsif not String_Is_Int_Array (Sequence) then
+         String_Not_All_Integers
+      else
+         String_Is_Valid);
 
    --------------------
    -- Sequence_Found --
